@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="testing.gps_service.MainActivity">
+    tools:context=".MainActivity">
 
     <Button
         android:layout_width="wrap_content"
@@ -26,6 +26,19 @@
         android:layout_alignTop="@+id/button"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go To MAP"
+        android:id="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="3sp"
+        android:layout_marginRight="3sp"
+        android:gravity="center"
+         />
 
     <ScrollView
         android:layout_width="wrap_content"

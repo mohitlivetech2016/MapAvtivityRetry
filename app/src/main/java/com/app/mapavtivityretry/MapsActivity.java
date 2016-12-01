@@ -1,5 +1,9 @@
 package com.app.mapavtivityretry;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -13,16 +17,59 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private BroadcastReceiver broadcastReceiver;
+    double longtitude,latitude;
+    private GoogleMap getMap;
+    public void setLat(double lat){
 
+        latitude = lat;
+        System.out.print(latitude);
+    }
+
+    public void setLng(double lng){
+
+        longtitude = lng;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        if(broadcastReceiver == null){
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+
+                    MapsActivity fragment = new MapsActivity();
+                    fragment.setLat(intent.getDoubleExtra("latitude",0));
+                    fragment.setLng(intent.getDoubleExtra("longitude",0));
+                    //FragmentTransaction tr = activity.getSupportFragmentManager().beginTransaction();
+                    //tr.add(R.id.content_frame, fragment, null);
+
+
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
 
 
     /**
@@ -38,9 +85,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        LatLng yourLocation = new LatLng(latitude, longtitude);
+
+        mMap.addMarker(new MarkerOptions().position(yourLocation).title("Your Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(yourLocation));
+       // Sets map position.
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        System.out.print("Lat = "+latitude+"   long = "+longtitude  + "...............................................");
+       /* LatLng yourLocation = new LatLng(this.latitude, this.longtitude);
+
+        mMap.addMarker(new MarkerOptions().position(yourLocation).title("Your Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(yourLocation));*/
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(broadcastReceiver != null){
+            unregisterReceiver(broadcastReceiver);
+        }
     }
 }

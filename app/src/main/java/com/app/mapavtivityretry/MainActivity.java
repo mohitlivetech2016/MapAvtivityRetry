@@ -16,9 +16,10 @@ import android.widget.Button;
 import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
-    private Button btn_start, btn_stop;
-    private TextView textView;
+    private Button mBtnStartActivity, mBtnStopActivity, mBtnCallMapActivity;
+    private TextView mTextView;
     private BroadcastReceiver broadcastReceiver;
+
 
     @Override
     protected void onResume() {
@@ -28,13 +29,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onReceive(Context context, Intent intent) {
 
-                    textView.append("\n" +intent.getExtras().get("coordinates"));
+                    mTextView.append("\n" +intent.getExtras().get("coordinates"));
 
                 }
             };
         }
         registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
     }
+
 
     @Override
     protected void onDestroy() {
@@ -49,9 +51,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn_start = (Button) findViewById(R.id.button);
-        btn_stop = (Button) findViewById(R.id.button2);
-        textView = (TextView) findViewById(R.id.textView);
+        mBtnStartActivity = (Button) findViewById(R.id.button);
+        mBtnStopActivity = (Button) findViewById(R.id.button2);
+        mBtnCallMapActivity=(Button)findViewById(R.id.button3);
+        mTextView = (TextView) findViewById(R.id.textView);
 
         if(!runtime_permissions())
             enable_buttons();
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void enable_buttons() {
 
-        btn_start.setOnClickListener(new View.OnClickListener() {
+        mBtnStartActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i =new Intent(getApplicationContext(),GpsService.class);
@@ -68,13 +71,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_stop.setOnClickListener(new View.OnClickListener() {
+        mBtnStopActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent i = new Intent(getApplicationContext(),GpsService.class);
                 stopService(i);
 
+            }
+        });
+
+        mBtnCallMapActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i =new Intent(MainActivity.this,MapsActivity.class);
+                startActivity(i);
             }
         });
 
@@ -89,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
 
 
     @Override
