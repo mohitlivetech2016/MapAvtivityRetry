@@ -84,8 +84,22 @@ public class MainActivity extends AppCompatActivity {
         mBtnCallMapActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i =new Intent(MainActivity.this,MapsActivity.class);
-                startActivity(i);
+                Intent j =new Intent(MainActivity.this,MapsActivity.class);
+
+                if(broadcastReceiver == null){
+                    broadcastReceiver = new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+
+                           // mTextView.append("\n" +intent.getExtras().get("coordinates"));
+                            intent.getExtras().get("longitude");
+
+                        }
+                    };
+                }
+                registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
+
+                startActivity(j);
             }
         });
 

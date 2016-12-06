@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String TAG = "MapActivity";
     private GoogleMap mMap;
     private BroadcastReceiver broadcastReceiver;
     double longtitude,latitude;
@@ -34,6 +38,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        Log.d(TAG, "OnCreate Called.........................................................................");
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "Onresume Called.........................................................................");
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "Onstart Called.........................................................................");
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+
+        Log.d(TAG, "OnCreateView Called.........................................................................");
 
         if(broadcastReceiver == null){
             broadcastReceiver = new BroadcastReceiver() {
@@ -52,25 +80,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             };
         }
         registerReceiver(broadcastReceiver,new IntentFilter("location_update"));
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
+
+
+
+
+        return super.onCreateView(name, context, attrs);
+
 
     }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-
 
     /**
      * Manipulates the map once available.
@@ -84,7 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        Log.d(TAG, "OnMapReady Called Called.........................................................................");
         LatLng yourLocation = new LatLng(latitude, longtitude);
 
         mMap.addMarker(new MarkerOptions().position(yourLocation).title("Your Location"));
